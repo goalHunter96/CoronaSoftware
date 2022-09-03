@@ -26,10 +26,13 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -43,27 +46,26 @@ public class CoronaSoftwareUI extends Application {
             FXCollections.observableArrayList(
 
                     /*Testpersonen Standardwerte*/
-                    new Testperson("Bidiamba", "Sephora", "01.09.1996", "Musterstraße 1", "918340456", "abc@def.de", "Positiv", ""),
-                    new Testperson("Yigittekin", "Dilara", "19.04.1999", "Musterstraße 2", "345678634", "hjk@def.de", "Negativ", ""),
-                    new Testperson("Brooke", "Aaliah", "23.08.1995", "Musterstraße 5", "907892634", "ekg@def.de", "Positiv", ""),
-                    new Testperson("Lee", "Seok-Jae", "04.06.1980", "Musterstraße 6", "483085900", "dek@def.de","Negativ", "")
+                    new Testperson("Bidiamba", "Sephora", "1996-09-01", "Musterstraße 1", "918340456", "abc@def.de", "Positiv", ""),
+                    new Testperson("Yigittekin", "Dilara", "1999-04-19", "Musterstraße 2", "345678634", "hjk@def.de", "Negativ", ""),
+                    new Testperson("Brooke", "Aaliah", "1995-08-23", "Musterstraße 5", "907892634", "ekg@def.de", "Positiv", ""),
+                    new Testperson("Lee", "Seok-Jae", "1980-06-04", "Musterstraße 6", "483085900", "dek@def.de", "Negativ", "")
             );
-
 
 
     @Override
     public void start(Stage stage) throws Exception {
 
-            stage.setTitle("Corona Testzentrum - Herzlich Willkommen!");
-            BorderPane bp = new BorderPane();
-            bp.setPrefSize(1050.0, 500.0);
+        stage.setTitle("Corona Testzentrum - Herzlich Willkommen!");
+        BorderPane bp = new BorderPane();
+        bp.setPrefSize(1050.0, 500.0);
 
-            final Label home = new Label("Homepage - Corona Testzentrum Dortmund");
-            home.setFont(new Font("Arial", 30.0));
-            home.setTextFill(Paint.valueOf("orange"));
+        final Label home = new Label("Homepage - Corona Testzentrum Dortmund");
+        home.setFont(new Font("Arial", 30.0));
+        home.setTextFill(Paint.valueOf("orange"));
 
 
-            table.setEditable(true);
+        table.setEditable(true);
         /*Tabellenspalte*/
 
         /*Tabelle Spaltennamen*/
@@ -78,10 +80,10 @@ public class CoronaSoftwareUI extends Application {
         vorname.setMinWidth(100);
         /*Daten werden mit Spalten in Beziehung gesetzt*/
         vorname.setCellValueFactory(
-                new PropertyValueFactory<Testperson,String>("vorname")
+                new PropertyValueFactory<Testperson, String>("vorname")
         );
 
-        TableColumn geburtsdatum  = new TableColumn("Geburtsdatum");
+        TableColumn geburtsdatum = new TableColumn("Geburtsdatum");
         geburtsdatum.setMinWidth(100);
         /*Daten werden mit Spalten in Beziehung gesetzt*/
         geburtsdatum.setCellValueFactory(
@@ -107,24 +109,21 @@ public class CoronaSoftwareUI extends Application {
         email.setMinWidth(100);
         /*Daten werden mit Spalten in Beziehung gesetzt*/
         email.setCellValueFactory(
-                new PropertyValueFactory<Testperson,String>("email")
+                new PropertyValueFactory<Testperson, String>("email")
 
         );
 
-        TableColumn resultat =new TableColumn("Resultat");
+        TableColumn resultat = new TableColumn("Resultat");
         resultat.setMinWidth(100);
         /*Daten werden mit Spalten in Beziehung gesetzt*/
         resultat.setCellValueFactory(
-                new PropertyValueFactory<Testperson,String>("resultat")
+                new PropertyValueFactory<Testperson, String>("resultat")
         );
 
         /*Auswahlmöglichkeiten Positiv oder Negativ und mehrere Adressen*/
 
         String[] choice = {"Positiv", "Negativ"};
         ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(choice));
-
-        String [] choiceAdress = {"Musterstraße ", "Am Wasserturm ", "Tannenstr. ", "Heinrich-Heine Str. ", "Königsallee ", "Frankfurter Str. "};
-        ChoiceBox cbAdress = new ChoiceBox(FXCollections.observableArrayList(choiceAdress));
 
 
 
@@ -133,39 +132,52 @@ public class CoronaSoftwareUI extends Application {
         auswahl.setMinWidth(100);
         /*Daten werden mit Spalten in Beziehung gesetzt*/
         auswahl.setCellValueFactory(
-                new PropertyValueFactory<Testperson,String>("remark")
+                new PropertyValueFactory<Testperson, String>("remark")
         );
 
 
         /*Damit man weitere Testpersonen hinzufügen kann*/
-            final TextField addName = new TextField();
-            addName.setPromptText("Name");
-            addName.setMaxWidth(name.getPrefWidth());
+        final TextField addName = new TextField();
+        addName.setPromptText("Name");
+        addName.setMaxWidth(name.getPrefWidth());
 
-            final TextField addVorname = new TextField();
-            addVorname.setPromptText("Vorname");
-            addVorname.setMaxWidth(vorname.getPrefWidth());
+        final TextField addVorname = new TextField();
+        addVorname.setPromptText("Vorname");
+        addVorname.setMaxWidth(vorname.getPrefWidth());
 
-            final TextField addGeburtsdatum = new TextField();
-            addGeburtsdatum.setPromptText("Geburtsdatum");
-            addGeburtsdatum.setMaxWidth(geburtsdatum.getPrefWidth());
 
-            final TextField addAddress = new TextField();
-            cbAdress.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-               @Override
-               public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                     addAddress.setPromptText(choiceAdress[number.intValue()]);
-               }
-            });
-            addAddress.setMaxWidth(adresse.getPrefWidth());
+        final DatePicker addGeburtsdatum = new DatePicker();
+        addGeburtsdatum.setPromptText("Geburtsdatum");
+        addGeburtsdatum.setMaxWidth(geburtsdatum.getPrefWidth());
+        addGeburtsdatum.setShowWeekNumbers(true);
 
-            final TextField addTelefonnummer = new TextField();
-            addTelefonnummer.setPromptText("Telefonnummer");
-            addTelefonnummer.setMaxWidth(telefonnummer.getPrefWidth());
+        ChoiceBox choiceAddress = new ChoiceBox();
+        choiceAddress.getItems().add("Musterstraße");
+        choiceAddress.getItems().add("Tannenstr.");
+        choiceAddress.getItems().add("Am Wasserturm");
+        choiceAddress.getItems().add("Heinrich-Heine Str.");
+        choiceAddress.getItems().add("Königsallee");
+        choiceAddress.getItems().add("Frankfurter Str.");
 
-            final TextField addEmail = new TextField();
-            addEmail.setPromptText("Email");
-            addEmail.setMaxWidth(email.getPrefWidth());
+
+        ChoiceBox cbAdress = new ChoiceBox(FXCollections.observableArrayList(choiceAddress));
+
+        final TextField addAddress = new TextField();
+        cbAdress.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                addAddress.setPromptText(choiceAddress.getValue().toString());
+            }
+        });
+        addAddress.setMaxWidth(adresse.getPrefWidth());
+
+        final TextField addTelefonnummer = new TextField();
+        addTelefonnummer.setPromptText("Telefonnummer");
+        addTelefonnummer.setMaxWidth(telefonnummer.getPrefWidth());
+
+        final TextField addEmail = new TextField();
+        addEmail.setPromptText("Email");
+        addEmail.setMaxWidth(email.getPrefWidth());
 
 
             /* CODE BEISPIEL !!!!
@@ -180,86 +192,86 @@ public class CoronaSoftwareUI extends Application {
         });*/
 
 
-            final TextField addResultat = new TextField();
-            cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-                @Override
-                public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                    addResultat.setPromptText(choice[t1.intValue()]);
+        final TextField addResultat = new TextField();
+        cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                addResultat.setPromptText(choice[t1.intValue()]);
+            }
+        });
+        addResultat.setMaxWidth(resultat.getPrefWidth());
+
+
+        /*Spalte auf der linken Seite der GUI*/
+        var dashboard = new Label("Dashboard");
+        var schichtplan = new Label("Schichtplan");
+        var testpersonen = new Label("Testpersonen");
+        var termin = new Label("Termin");
+        var öffungszeiten = new Label("Öffungszeiten");
+        var einstellung = new Label("Einstellung");
+
+
+        /*Buttons*/
+        Button hinzufügen = new Button("Hinzufügen");
+
+        hinzufügen.setOnAction(e -> {
+            while (!(!(addName != null) || addVorname != null || addGeburtsdatum != null || addAddress != null
+                    || addTelefonnummer != null || addEmail != null)) {
+                DialogUtil.showErrorDialog("Fehler", "Sie können keinen leeren Wert eingeben." +
+                        "\nBitte geben Sie Werte ein!");
+
+            }
+            daten.add(new Testperson(
+                            addName.getText(), addVorname.getText(),
+                            addGeburtsdatum.getValue().toString(), addAddress.getText(),
+                            addTelefonnummer.getText(), addEmail.getText(), addResultat.getPromptText(),
+                            ""
+                    )
+            );
+
+            addName.clear();
+            addVorname.clear();
+            //addGeburtsdatum.clear();
+            addAddress.clear();
+            addTelefonnummer.clear();
+            addEmail.clear();
+
+        });
+        Button entf = new Button("Entfernen");
+        entf.setOnAction(e -> {
+            Iterator<Testperson> it = daten.iterator();
+            while (it.hasNext()) {
+                Testperson p = it.next(); //Hier holt er die nächste Person und danach überprüft er, ob die Person selektiert worden ist
+                if (p.getRemark().isSelected()) {
+                    daten.remove(p);
                 }
-            });
-            addResultat.setMaxWidth(resultat.getPrefWidth());
+            }
+        });
 
+        Button schließen = new Button("Schließen");
+        schließen.setOnAction(e -> {
+            stage.close();
+        });
 
-            /*Spalte auf der linken Seite der GUI*/
-            var dashboard = new Label("Dashboard");
-            var schichtplan = new Label("Schichtplan");
-            var testpersonen = new Label("Testpersonen");
-            var termin  = new Label("Termin");
-            var öffungszeiten = new Label("Öffungszeiten");
-            var einstellung = new Label("Einstellung");
+        Button senden = new Button("Resultat senden");
+        /*Aktivitäten der Maus, wenn die etwas anklickt*/
 
+        senden.setOnAction(e -> { /*Nachdem senden der Resultate an die betroffene Person, wird diese von der Liste entfernt*/
+            Iterator<Testperson> iterator = daten.iterator(); //ER zeigt auf das erste Element in der Liste
 
-            /*Buttons*/
-            Button hinzufügen = new Button("Hinzufügen");
-
-            hinzufügen.setOnAction(e ->{
-                while (!(!(addName != null) || addVorname != null || addGeburtsdatum != null || addAddress != null
-                        || addTelefonnummer != null || addEmail != null)){
-                    DialogUtil.showErrorDialog("Fehler", "Sie können keinen leeren Wert eingeben." +
-                            "\nBitte geben Sie Werte ein!");
-
+            while (iterator.hasNext()) { //Solange in der Liste ein Nachfolger vorhanden ist -> ENDLOSSCHLEIFE, weil immer wahr bei for schleife
+                Testperson p = iterator.next(); //Hier holt sich der Iterator die nächste Person
+                if (p.getRemark().isSelected()) {
+                    DialogUtil.showMessageDialog("Email versendet",
+                            "E-Mail mit dem '" + p.getResultat() + "' Resultat wurde an: " + p.getName() + ", " + p.getVorname() + " versendet!");
+                    daten.remove(p);
                 }
-                daten.add(new Testperson(
-                        addName.getText(), addVorname.getText(),
-                        addGeburtsdatum.getText(), addAddress.getText(),
-                        addTelefonnummer.getText(), addEmail.getText(),addResultat.getPromptText(),
-                        ""
-                        )
-                );
-
-                addName.clear();
-                addVorname.clear();
-                addGeburtsdatum.clear();
-                addAddress.clear();
-                addTelefonnummer.clear();
-                addEmail.clear();
-
-            });
-            Button entf = new Button("Entfernen");
-            entf.setOnAction(e ->{
-                Iterator<Testperson> it = daten.iterator();
-                while(it.hasNext()) {
-                    Testperson p = it.next(); //Hier holt er die nächste Person und danach überprüft er, ob die Person selektiert worden ist
-                    if (p.getRemark().isSelected()){
-                        daten.remove(p);
-                    }
-                }
-            });
-
-            Button schließen = new Button("Schließen");
-            schließen.setOnAction(e ->{
-                stage.close();
-            });
-
-            Button senden = new Button("Resultat senden");
-           /*Aktivitäten der Maus, wenn die etwas anklickt*/
-
-           senden.setOnAction(e ->{ /*Nachdem senden der Resultate an die betroffene Person, wird diese von der Liste entfernt*/
-               Iterator<Testperson> iterator = daten.iterator(); //ER zeigt auf das erste Element in der Liste
-
-               while (iterator.hasNext()) { //Solange in der Liste ein Nachfolger vorhanden ist -> ENDLOSSCHLEIFE, weil immer wahr bei for schleife
-                   Testperson p = iterator.next(); //Hier holt sich der Iterator die nächste Person
-                   if (p.getRemark().isSelected()) {
-                       DialogUtil.showMessageDialog("Email versendet",
-                               "E-Mail mit dem '" + p.getResultat() + "' Resultat wurde an: " + p.getName() + ", " + p.getVorname() + " versendet!");
-                       daten.remove(p);
-                   }
 //                        if (p.getRemark().isSelected() && anz >= 1){
 //                                     sammelListe.add(p);
 //                                        DialogUtil.showMessageDialog("Email versendet",
 //                                          "Es wurden mehrere Emails, mit den zugehörigen Resultaten an: "  + sammelListe.get(anz).toString() + " gesendent");
 //                        }
-               }
+            }
 
 
 
@@ -279,56 +291,53 @@ public class CoronaSoftwareUI extends Application {
                   }*/
 
 
-           });
+        });
 
 
+        table.setItems(daten);
+        table.getColumns().addAll(name, vorname, geburtsdatum, adresse, telefonnummer, email, resultat, auswahl);
 
+        final VBox vBox = new VBox();
+        vBox.setSpacing(5.0);
+        vBox.setPadding(new Insets(10, 0, 0, 10));
+        vBox.getChildren().addAll(table);
 
-            table.setItems(daten);
-            table.getColumns().addAll(name, vorname, geburtsdatum, adresse, telefonnummer, email, resultat, auswahl);
+        /*Liste auf der linken Spalte*/
+        var liste2 = new ListView<Label>();
+        liste2.getItems().addAll(dashboard, schichtplan, testpersonen, termin, öffungszeiten, einstellung);
 
-            final VBox vBox = new VBox();
-            vBox.setSpacing(5.0);
-            vBox.setPadding(new Insets(10,0,0,10));
-            vBox.getChildren().addAll(table);
+        /*Die Buttons - HBox, VBox*/
+        HBox hBox = new HBox(senden, schließen);
+        hBox.setSpacing(15.0);
+        hBox.setAlignment(Pos.BOTTOM_RIGHT);
 
-            /*Liste auf der linken Spalte*/
-            var liste2 = new ListView<Label>();
-            liste2.getItems().addAll(dashboard, schichtplan, testpersonen, termin, öffungszeiten, einstellung);
+        HBox hinzu = new HBox();
+        hinzu.getChildren().addAll(addName, addVorname,
+                addGeburtsdatum, addAddress, addTelefonnummer,
+                addEmail, cb);
+        hinzu.setSpacing(3);
 
-            /*Die Buttons - HBox, VBox*/
-            HBox hBox = new HBox(senden,schließen);
-            hBox.setSpacing(15.0);
-            hBox.setAlignment(Pos.BOTTOM_RIGHT);
+        HBox h = new HBox(hinzu, hinzufügen, entf);
+        h.setSpacing(3);
 
-            HBox hinzu = new HBox();
-            hinzu.getChildren().addAll(addName, addVorname,
-                    addGeburtsdatum, addAddress, addTelefonnummer,
-                    addEmail, cb);
-            hinzu.setSpacing(3);
+        VBox v_hinzu = new VBox(h, hBox);
 
-            HBox h = new HBox(hinzu, hinzufügen, entf);
-            h.setSpacing(3);
+        bp.setTop(home);
+        bp.setCenter(vBox);   /*Tabelle der Testpersonen*/
+        bp.setLeft(liste2);   /*Dashboard, Testperson, Kunden, ...*/
+        bp.setBottom(v_hinzu);
 
-            VBox v_hinzu = new VBox(h, hBox);
-
-          bp.setTop(home);
-          bp.setCenter(vBox);   /*Tabelle der Testpersonen*/
-          bp.setLeft(liste2);   /*Dashboard, Testperson, Kunden, ...*/
-          bp.setBottom(v_hinzu);
-
-          stage.setScene(new Scene(bp));
-          stage.show();
+        stage.setScene(new Scene(bp));
+        stage.show();
     }
 
 
-        public static void main(String[] args) {
-            launch(args);
-        }
-
-
-
+    public static void main(String[] args) {
+        launch(args);
     }
+
+
+}
 
 
 
@@ -371,25 +380,7 @@ public class CoronaSoftwareUI extends Application {
 //            Mitarbeiter ma2 = new Mitarbeiter(409, "Teller", "Monika", b2);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //Testperson p1 = new Testperson("Bidiamba", "Sephora", "01.09.1996", "Musterstraße 1", 91834, "abc@def.de");
+//Testperson p1 = new Testperson("Bidiamba", "Sephora", "01.09.1996", "Musterstraße 1", 91834, "abc@def.de");
 //Testperson p2 = new Testperson("Yigittekin", "Dilara", "19.04.1999", "Musterstraße 2", 345678, "hjk@def.de");
 
 
