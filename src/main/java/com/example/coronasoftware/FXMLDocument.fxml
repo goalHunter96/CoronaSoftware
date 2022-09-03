@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.coronasoftware.FMXLDocumentController">
+    <children>
+
+        <Label fx:id="home" layoutX="126" layoutY="120" minHeight="16" minWidth="69"/>
+
+        <Label layoutX="33.0" layoutY="25.0"  text="Homepage - Corona Testzentrum Dortmund" textFill="orange">
+                <font>
+                    <Font name="Arial" size="24.0" />
+                </font>
+        </Label>
+
+
+
+
+        <VBox layoutX="36.0" layoutY="76.0" prefHeight="279.0" prefWidth="372.0">
+            <TableView fx:id="table" />
+            <Button mnemonicParsing="false" onAction="#deleteSelectedRows" text="Entfernen" />
+        </VBox>
+
+    </children>
+
+</AnchorPane>
