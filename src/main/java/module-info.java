@@ -8,4 +8,6 @@ module com.example.coronasoftware {
 
     opens com.example.coronasoftware to javafx.graphics, javafx.base;
     exports com.example.coronasoftware;
+    exports ui;
+    opens ui to javafx.base, javafx.graphics;
 }
