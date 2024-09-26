@@ -210,6 +210,8 @@ public class CoronaSoftwareUI extends Application {
         Menu öffnungszeiten = new Menu("Öffnungszeiten");
         Menu einstellung = new Menu("Einstellungen");
 
+        //Hier erscheint das Fenster zum Hinzufügen von neuen Testpersonen. Das muss geändert werden,
+        // da das Fenster leer ist und das Programm sich aufhängt!
         MenuItem testPers = new MenuItem("Neue Testperson hinzufügen");
         testpersonen.getItems().add(testPers);
         menu.getMenus().addAll(dashboard,schichtplan,testpersonen,termin,öffnungszeiten,einstellung);
