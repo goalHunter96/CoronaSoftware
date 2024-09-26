@@ -37,7 +37,7 @@ public class TestpersonView extends Application {
 
         stage.setTitle("Neue Testperson");
         stage.setHeight(500.0);
-        stage.setWidth(500.0);
+        stage.setWidth(1500.0);
         table.setEditable(true);
 
         Button hinzufügen = new Button("Hinzufügen");
@@ -47,11 +47,9 @@ public class TestpersonView extends Application {
 
         BorderPane bp = new BorderPane();
 
-
-
         /*Tabelle Spaltennamen*/
         TableColumn name = new TableColumn("Name");
-        name.setMinWidth(100);
+        name.setMaxWidth(1500);
         name.setCellValueFactory(
                 new PropertyValueFactory<Testperson, String>("name")
         );
@@ -163,7 +161,7 @@ public class TestpersonView extends Application {
 
             addName.clear();
             addVorname.clear();
-            //addGeburtsdatum
+            addGeburtsdatum.setValue(null);
             addAdresse.clear();
             addTelefonnummer.clear();
             addEmail.clear();
@@ -199,6 +197,8 @@ public class TestpersonView extends Application {
                 telefonnummer, email, resultat,auswahl);
 
         VBox vbox = new VBox(addName,addVorname,addGeburtsdatum,addAdresse,addTelefonnummer,addEmail, addResultat);
+        vbox.setSpacing(5.0);
+
 
 
         HBox hbox = new HBox(hinzufügen,entfernen);
@@ -209,14 +209,16 @@ public class TestpersonView extends Application {
         hb.setAlignment(Pos.BOTTOM_RIGHT);
         hb.setSpacing(10.0);
 
+
         bp.setLeft(vbox);
         bp.setCenter(hbox);
         bp.setBottom(hb);
 
         stage.setScene(new Scene(bp));
 
-
-
+        stage.show();
 
     }
+
+
 }
