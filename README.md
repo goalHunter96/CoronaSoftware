@@ -1,4 +1,6 @@
 # CoronaSoftware
-I'm trying to code a "Software" for a Corona Testing Center. This Software should be able to send the results to the selected Testperson. It also should delete 
-a testperson, if this is required. The users are the employees of the Testing Center. 
-The programming of this "Software" is for learning, so I can understand better how to code.
+Im Rahmen meines Praktikums im SS22 war es meine Aufgabe eine CoronaSoftware zu programmieren. Die Aufgaben, die ich implementieren wollte waren:
+- Die Benachrichtigung der Testpersonen über die Ergebnisse
+- Das Hinzufügen von Testpersonen mit all den benötigten Daten
+- Das man Personen entfernen kann, sobald die Resultate an die Person gesendet wurde
+Ich schreibe es mit JavaFX.
